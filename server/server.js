@@ -1,37 +1,26 @@
+// server/server.js
+
 const express = require("express");
 const mongoose = require("mongoose");
-const courseRoutes = require("./routes/courseRoutes");
 const cors = require("cors");
 require("dotenv").config();
 
-const userRoutes = require("./routes/userRoutes");
-
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use("/api/users", userRoutes);
-app.use("/api/courses", courseRoutes);
+mongoose.connect(process.env.MONGO_URL)
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.log(err));
 
-// Test Route
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/courses", require("./routes/courseRoutes"));
+
 app.get("/", (req, res) => {
-  res.send("LearnX Backend Running Successfully 🚀");
+  res.send("LearnX Backend Running");
 });
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB Connected ✅");
-  })
-  .catch((err) => {
-    console.log("DB Error:", err);
-  });
-
-// Server Start
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
