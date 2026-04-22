@@ -1,5 +1,3 @@
-// server/server.js
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,30 +5,26 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      "https://learnx-three.vercel.app",
-      "http://localhost:3000"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  })
-);
-
+// Simple open CORS for deployment
+app.use(cors());
 app.use(express.json());
 
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
-
-app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/courses", require("./routes/courseRoutes"));
-
+// Fast health route
 app.get("/", (req, res) => {
   res.send("LearnX Backend Running");
 });
+
+// Routes
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/courses", require("./routes/courseRoutes"));
+
+// MongoDB connect
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.log("DB Error:", err));
 
 const PORT = process.env.PORT || 5000;
 
