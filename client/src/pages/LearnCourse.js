@@ -1,7 +1,7 @@
+// client/src/pages/LearnCourse.js
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-fetch("https://learnx-backend.onrender.com/api/courses/one/...")
-fetch("https://learnx-backend.onrender.com/api/users/progress")
 
 function LearnCourse() {
   const { title } = useParams();
@@ -27,16 +27,19 @@ function LearnCourse() {
   };
 
   const completeLesson = async () => {
-    const res = await fetch("https://learnx-backend.onrender.com/api/users/progress", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: user.email,
-        title: courseTitle
-      })
-    });
+    const res = await fetch(
+      "https://learnx-backend.onrender.com/api/users/progress",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: user.email,
+          title: courseTitle
+        })
+      }
+    );
 
     const data = await res.json();
     setProgress(data.progress);

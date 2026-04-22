@@ -1,15 +1,15 @@
+// client/src/pages/Login.js
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  fetch("https://learnx-backend.onrender.com/api/users/login")
-  
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
-    
     email: "",
     password: ""
   });
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({
@@ -18,35 +18,36 @@ function Login() {
     });
   };
 
-  const handleSubmit = async () => {
-    const res = await fetch("https://learnx-backend.onrender.com/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
-    });
+  const loginUser = async () => {
+    const res = await fetch(
+      "https://learnx-backend.onrender.com/api/users/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      }
+    );
 
     const data = await res.json();
 
-    alert(data.message);
-
     if (data.token) {
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("user", JSON.stringify(data.user));
-  navigate("/dashboard");
-}
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      alert("Login Success");
+      navigate("/dashboard");
+    } else {
+      alert(data.message);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-      <div className="bg-white p-10 rounded-3xl shadow-2xl w-96">
-        <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
-          Login
-        </h1>
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <div className="bg-white p-8 rounded-2xl shadow w-[400px]">
+        <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
 
         <input
-          type="email"
           name="email"
           placeholder="Email"
           onChange={handleChange}
@@ -58,12 +59,12 @@ function Login() {
           name="password"
           placeholder="Password"
           onChange={handleChange}
-          className="w-full p-3 border rounded-xl mb-6"
+          className="w-full p-3 border rounded-xl mb-4"
         />
 
         <button
-          onClick={handleSubmit}
-          className="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-800"
+          onClick={loginUser}
+          className="w-full bg-blue-600 text-white p-3 rounded-xl"
         >
           Login
         </button>

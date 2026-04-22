@@ -1,6 +1,6 @@
+// client/src/pages/Admin.js
+
 import { useEffect, useState } from "react";
-fetch("https://learnx-backend.onrender.com/api/courses/one/...")
-fetch("https://learnx-backend.onrender.com/api/users/progress")
 
 function Admin() {
   const [form, setForm] = useState({
@@ -16,7 +16,9 @@ function Admin() {
   }, []);
 
   const loadCourses = async () => {
-    const res = await fetch("https://learnx-backend.onrender.com/api/courses/all");
+    const res = await fetch(
+      "https://learnx-backend.onrender.com/api/courses/all"
+    );
     const data = await res.json();
     setCourses(data);
   };
@@ -29,13 +31,19 @@ function Admin() {
   };
 
   const addCourse = async () => {
-    await fetch("https://learnx-backend.onrender.com/api/courses/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
-    });
+    const res = await fetch(
+      "https://learnx-backend.onrender.com/api/courses/add",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      }
+    );
+
+    const data = await res.json();
+    alert(data.message);
 
     setForm({
       title: "",
@@ -47,22 +55,26 @@ function Admin() {
   };
 
   const deleteCourse = async (id) => {
-    await fetch(`https://learnx-backend.onrender.com/api/courses/${id}`, {
-      method: "DELETE"
-    });
+    await fetch(
+      `https://learnx-backend.onrender.com/api/courses/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
 
     loadCourses();
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
-
       <h1 className="text-4xl font-bold text-blue-700 mb-8">
         Admin Panel
       </h1>
 
       <div className="bg-white p-6 rounded-2xl shadow mb-10">
-        <h2 className="text-2xl font-bold mb-5">Add Course</h2>
+        <h2 className="text-2xl font-bold mb-5">
+          Add Course
+        </h2>
 
         <input
           name="title"
@@ -96,7 +108,9 @@ function Admin() {
         </button>
       </div>
 
-      <h2 className="text-2xl font-bold mb-5">All Courses</h2>
+      <h2 className="text-2xl font-bold mb-5">
+        All Courses
+      </h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {courses.map((course) => (
@@ -121,7 +135,6 @@ function Admin() {
           </div>
         ))}
       </div>
-
     </div>
   );
 }
